@@ -125,19 +125,19 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        # Set up set to store visited vertices
+        # Initialize a set for keeping track of visited indices
         visited = set()
 
-        # Set up a list for the route
+        # Initialize a path with the starting_vertex
         path = [starting_vertex]
 
-        # Set up a queue  for enqueuing verticies
+        # Set up a queue  for enqueuing paths
         q = Queue()
 
         # Enqueue the path
         q.enqueue(path)
 
-        # Iterate through the vertices while the queue is not empty
+        # Iterate through the paths while the queue is not empty
         while q.size() > 0:
             # Dequeue the first path in the queue
             current_path = q.dequeue()
@@ -149,7 +149,7 @@ class Graph:
             if current_vertex == destination_vertex:
                 return current_path
 
-            # If haven't  visited the current vertex, add it to the visited set 
+            # If we haven't visited the current vertex, add it to the visited set 
             if current_vertex not in visited:
                 visited.add(current_vertex)
 
@@ -163,7 +163,7 @@ class Graph:
                 # We're making a new path for each neighbor
                 # so we can check which path is the shortest
 
-                # enqueue the neighbor's path
+                # enqueue the new path
                 q.enqueue(neighbor_path)
 
 
@@ -173,7 +173,47 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        # Initialize a set for keeping track of visited indices
+        visited = set()
+
+        # Initialize a path with the starting_vertex
+        path = [starting_vertex]
+
+        # Set up a stack for pushing paths
+        s = Stack()
+
+        # Push the path onto the stack
+        s.push(path)
+
+        # Pop off the latest path  while it's not empty
+        while s.size() > 0:
+            # Pop off the top path in the stack
+            current_path = s.pop()
+
+            # current_vertex is the last vertex in the current path
+            current_vertex = current_path[-1]
+
+            # If we're at the destination, return the current path
+            if current_vertex == destination_vertex:
+                return current_path
+
+            # If we haven't visited the current vertex, add it to the visited set 
+            if current_vertex not in visited:
+                visited.add(current_vertex)
+
+            # Iterate over the current vertex's neighbors  
+            for neighbor in self.get_neighbors(current_vertex):
+                # Make a copy of the current path
+                neighbor_path = current_path.copy()
+                # Add the neighbor to the current path
+                neighbor_path.append(neighbor)
+
+                # We're making a new path for each neighbor
+                # so we can check which path is the shortest
+
+                # push the new path onto the stack
+                s.push(neighbor_path)
+
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
         """

@@ -234,6 +234,8 @@ class Graph:
             path = []
 
         # Make a copy of the path
+        # This prevents unwanted mutation when recursing through 
+        # the current vertex's neighbors
         path = path.copy()
 
         # Append the vertex
@@ -251,6 +253,8 @@ class Graph:
                 new_path = self.dfs_recursive(neighbor, destination_vertex,
                                               visited, path)
 
+                # new_path be not None only when the destination_vertex 
+                # has been reached
                 if new_path is not None:
                     return new_path
 

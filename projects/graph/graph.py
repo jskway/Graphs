@@ -32,7 +32,7 @@ class Graph:
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
-        # Make a set to track visitors
+        # Make a set to track visited vertices
         visited = set()
 
         # Set up our queue
@@ -63,7 +63,31 @@ class Graph:
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        # Make a set to track visited vertices
+        visited = set()
+
+        # Set up a stack
+        s = Stack()
+
+        # Push the starting vertex onto the stack
+        s.push(starting_vertex)
+
+        # While the stack is not empty
+        while s.size() > 0:
+
+            # Pop off the top vertex
+            current_vertex = s.pop()
+
+            # Check if the current vertex was visited
+            if current_vertex not in visited:
+                # Add it to visited
+                visited.add(current_vertex)
+                print(current_vertex)
+
+                # Iterate over current vertex's neighbors and
+                # push them onto the stack
+                for neighbor in self.get_neighbors(current_vertex):
+                    s.push(neighbor)
 
     def dft_recursive(self, starting_vertex):
         """

@@ -130,7 +130,7 @@ class Graph:
         # Initialize a path with the starting_vertex
         path = [starting_vertex]
 
-        # Set up a queue  for enqueuing paths
+        # Set up a queue for enqueuing paths
         q = Queue()
 
         # Enqueue the path
@@ -154,17 +154,11 @@ class Graph:
 
             # Iterate over the current vertex's neighbors  
             for neighbor in self.get_neighbors(current_vertex):
-                # Make a copy of the current path
-                neighbor_path = current_path.copy()
-                # Add the neighbor to the current path
-                neighbor_path.append(neighbor)
-
-                # We're making a new path for each neighbor
-                # so we can check which path is the shortest
-
-                # enqueue the new path
-                q.enqueue(neighbor_path)
-
+                # Enqueue a new path for each neighbor, where each neighbor is
+                # added to the current_path
+                q.enqueue(current_path + [neighbor])
+                # list + [item] returns a new list with the item appended,
+                # without mutating the original list
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -202,17 +196,9 @@ class Graph:
 
             # Iterate over the current vertex's neighbors  
             for neighbor in self.get_neighbors(current_vertex):
-                # Make a copy of the current path
-                neighbor_path = current_path.copy()
-                # Add the neighbor to the current path
-                neighbor_path.append(neighbor)
-
-                # We're making a new path for each neighbor
-                # so we can check which path is the shortest
-
-                # push the new path onto the stack
-                s.push(neighbor_path)
-
+                # Make a new path for each neighbor, where the new path
+                # has the neighbor added to the end, and push it onto the stack
+                s.push(current_path + [neighbor])
 
     def dfs_recursive(self, vertex, destination_vertex, visited=None, path=None):
         """
@@ -226,19 +212,17 @@ class Graph:
         if visited == None:
             visited = set()
 
-        visited.add(vertex)
+        if vertex not in visited:
+            visited.add(vertex)
 
         # Initialize a path list if None
         if path == None:
             path = []
 
-        # Make a copy of the path
-        # This prevents unwanted mutation when recursing through 
-        # the current vertex's neighbors
-        path = path.copy()
-
-        # Append the vertex
-        path.append(vertex)
+        # Make a new path list with the vertex appended to the end
+        # This prevents mutation bugs when recursing through 
+        # the vertex's neighbors
+        path = path + [vertex]
 
         # If we're at the destination return the current path
         if vertex == destination_vertex:
@@ -248,16 +232,16 @@ class Graph:
         for neighbor in self.get_neighbors(vertex):
             # If the neighbor hasn't been visited
             if neighbor not in visited:
-                # Get a new path by following the neighbor's edge
+                # Get a new path by recursing through the neighbor's edge(s)
                 new_path = self.dfs_recursive(neighbor, destination_vertex,
                                               visited, path)
 
-                # new_path be not None only when the destination_vertex 
+                # new_path !== None only when the destination_vertex 
                 # has been reached
                 if new_path is not None:
                     return new_path
 
-        # If  all neighbors have been visited for this vertex
+        # If all neighbors have been visited for this vertex
         # and we're not at the destination_vertex
         return None
 

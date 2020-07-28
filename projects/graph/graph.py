@@ -47,14 +47,14 @@ class Graph:
             # dequeue the first vertex
             current_vertex = q.dequeue()
 
-            # Check the current vertex was visited
+            # Check if the current vertex was visited
             if current_vertex not in visited:
-                # Add it to visited
+                # Add it to visited and print it
                 visited.add(current_vertex)
                 print(current_vertex)
 
-                # Iterate over current vertex's neighbors and
-                # add them to the queue
+                # Iterate over current_vertex's neighbors and
+                # enqueue them
                 for neighbor in self.get_neighbors(current_vertex):
                     q.enqueue(neighbor)
 
@@ -80,7 +80,7 @@ class Graph:
 
             # Check if the current vertex was visited
             if current_vertex not in visited:
-                # Add it to visited
+                # Add it to visited and print it
                 visited.add(current_vertex)
                 print(current_vertex)
 
@@ -100,23 +100,22 @@ class Graph:
         if visited == None:
             visited = set()
 
-        # If the starting_vertix has not been visited
+        # If the vertex has not been visited
         if vertex not in visited:
-            # Print it and added it to the visited set
+            # Print it and add it to visited 
             print(vertex)
             visited.add(vertex)
 
             # Get the neighbors
             neighbors = self.get_neighbors(vertex)
-            # If there are no neighbors, return the set of visited vertices
-            # This is our base case
-            if len(neighbors) == 0:
-                return visited
 
-            # Otherwise, iterate through the neighbors
+            # Iterate through the neighbors
             for neighbor in neighbors:
                 # And recurse for each neighbor
                 self.dft_recursive(neighbor, visited)
+        # Base Case: All vertexes have been visited
+        else:
+            return
 
 
     def bfs(self, starting_vertex, destination_vertex):

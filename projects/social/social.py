@@ -1,3 +1,18 @@
+import random
+
+class Queue():
+    def __init__(self):
+        self.queue = []
+    def enqueue(self, value):
+        self.queue.append(value)
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+    def size(self):
+        return len(self.queue)
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -14,11 +29,14 @@ class SocialGraph:
         """
         if user_id == friend_id:
             print("WARNING: You cannot be friends with yourself")
+            return False
         elif friend_id in self.friendships[user_id] or user_id in self.friendships[friend_id]:
             print("WARNING: Friendship already exists")
+            return False
         else:
             self.friendships[user_id].add(friend_id)
             self.friendships[friend_id].add(user_id)
+            return True
 
     def add_user(self, name):
         """
@@ -45,8 +63,25 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+        for user in range(num_users):
+            self.add_user(user)
 
         # Create friendships
+        total_friendships = num_users * avg_friendships
+        friendships_made = 0
+
+        # Until we've made the total friendships required
+        while friendships_made < total_friendships:
+            # Choose two random users
+            user = random.randint(1, self.last_id)
+            friend = random.randint(1, self.last_id)
+
+            # Try to create a friendship
+            result = self.add_friendship(user, friend)
+
+            # If successful, increment the counter
+            if result:
+                friendships_made += 1
 
     def get_all_social_paths(self, user_id):
         """
@@ -58,7 +93,25 @@ class SocialGraph:
         The key is the friend's ID and the value is the path.
         """
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+
+        # Set up a queue for BFT
+        q = Queue()
+
+        q.enqueue([user_id])
+
+        while q.size() > 0:
+            current_path = q.dequeue()
+            current_node = current_path[-1]
+
+            if current_node not in visited:
+                visited[current_node] = current_path
+
+                friends = self.friendships[current_node]
+
+                for friend in friends:
+                    friend_path = current_path + [friend]
+                    q.enqueue(friend_path)
+
         return visited
 
 

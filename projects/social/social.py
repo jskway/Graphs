@@ -46,6 +46,11 @@ class SocialGraph:
         self.users[self.last_id] = User(name)
         self.friendships[self.last_id] = set()
 
+    def fisher_yates_shuffle(self, l):
+        for i in range(0, len(l)):
+            random_index = random.randint(i, len(l) - 1)
+            l[random_index], l[i] = l[i], l[random_index]
+
     def populate_graph(self, num_users, avg_friendships):
         """
         Takes a number of users and an average number of friendships
@@ -66,22 +71,24 @@ class SocialGraph:
         for user in range(num_users):
             self.add_user(user)
 
-        # Create friendships
+        # Create a list with all possible friendship combinations
+        friendship_combinations = []
+
+        for user in range(1, self.last_id + 1):
+            for friend in range(user + 1, self.last_id + 1):
+                friendship_combinations.append((user, friend))
+
+        # Shuffle the list
+        self.fisher_yates_shuffle(friendship_combinations)
+
         total_friendships = num_users * avg_friendships
-        friendships_made = 0
 
-        # Until we've made the total friendships required
-        while friendships_made < total_friendships:
-            # Choose two random users
-            user = random.randint(1, self.last_id)
-            friend = random.randint(1, self.last_id)
+        # Grab 
+        friends_to_make = friendship_combinations[:(total_friendships // 2)]
 
-            # Try to create a friendship
-            result = self.add_friendship(user, friend)
+        for friendship in friends_to_make:
+            self.add_friendship(friendship[0], friendship[1])
 
-            # If successful, increment the counter
-            if result:
-                friendships_made += 1
 
     def get_all_social_paths(self, user_id):
         """

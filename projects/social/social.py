@@ -83,9 +83,10 @@ class SocialGraph:
 
         total_friendships = num_users * avg_friendships
 
-        # Grab 
+        # Grab total_friendships // 2 friendships out of the random combinations  
         friends_to_make = friendship_combinations[:(total_friendships // 2)]
 
+        # Iterate through the tuples of friendships, and create friendships
         for friendship in friends_to_make:
             self.add_friendship(friendship[0], friendship[1])
 
@@ -104,13 +105,19 @@ class SocialGraph:
         # Set up a queue for BFT
         q = Queue()
 
+        # Enqueue the starting path, which a list with the starting vertex
         q.enqueue([user_id])
 
         while q.size() > 0:
+            # Dequeue the current path
             current_path = q.dequeue()
+
+            # Get the last node of the path
             current_node = current_path[-1]
 
+            # If it hasn't been visited
             if current_node not in visited:
+                # Update the path
                 visited[current_node] = current_path
 
                 friends = self.friendships[current_node]
